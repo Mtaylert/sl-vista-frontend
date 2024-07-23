@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
+import Header from './header';
+
 
 function App() {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/call-terminal');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+    <div>
+
+    <Header />
+    <div className="App flex flex-col items-center mt-10">
+      <h1 className="text-2xl font-bold mb-4">SalesLoft Call Assistant</h1>
+      <button
+        className="bg-green-500 px-4 py-2 rounded mb-4"
+        onClick={handleButtonClick}
+      >
+        Open Caller Terminal
+      </button>
     </div>
+  </div>
   );
 }
 
