@@ -171,7 +171,7 @@ function CallTerminal() {
                                 {recommendationMessages.map((item, index) => (
                                     <li key={index} className="p-2 border-b border-gray-300">
                                         <div className="font-semibold">{item.label}: ({item.timestamp})</div>
-                                        <div>{item.message}</div>
+                                        <div dangerouslySetInnerHTML={{ __html: item.message }} />
                                     </li>
                                 ))}
                             </ul>
