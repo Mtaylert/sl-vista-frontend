@@ -7,15 +7,16 @@ function CallTerminal() {
     const [messages, setMessages] = useState([]);
     const [recommendation, setRecommendation] = useState(null);
     const [recommendationMessages, setRecommendationMessages] = useState([]);
+    const [salesAchievement, setSalesAchievement] = useState({});
     const [isModalOpen, setModalOpen] = useState(false);
-    const [showAll, setShowAll] = useState(false);
+    const [showAll, setShowAll] = useState(true);
+    const [callEnded, setCallEnded] = useState(false); // New state for call end action
 
     const fetchRecommendations = async () => {
         try {
             const response = await axios.get('http://0.0.0.0:5050/fetch-recommendations');
             if (response.status === 200) {
-                const recommendation_list = response.data.current_recommendations;
-                return recommendation_list;
+                return response.data;
             } else {
                 console.error("Failed to fetch recommendations");
             }
@@ -35,7 +36,8 @@ function CallTerminal() {
             setMessages((prevMessages) => [...prevMessages, event.data]);
             console.log(event.data);
             const currentRecommendation = await fetchRecommendations();
-            setRecommendationMessages(currentRecommendation);
+            setRecommendationMessages(currentRecommendation.current_recommendations);
+            setSalesAchievement(currentRecommendation.sales_checklist);
             setModalOpen(true);
         };
 
@@ -66,18 +68,30 @@ function CallTerminal() {
         setShowAll((prevShowAll) => !prevShowAll);
     };
 
+    const endCall = () => {
+        setCallEnded(true); // Set the state to indicate the call has ended
+    };
+
     return (
         <div className="relative flex flex-col h-screen">
             <Header />
             <div className="flex flex-col items-center mt-10 flex-grow">
                 <h1 className="text-2xl font-bold mb-4">SalesLoft Call Assistant</h1>
-                <div className="w-full max-w-4xl overflow-y-auto max-h-[80vh] p-4">
-                    <button
-                        onClick={handleToggleAll}
-                        className="absolute top-4 right-4 px-3 py-1 text-sm bg-green-500 text-white rounded"
-                    >
-                        {showAll ? 'Collapse Details' : 'Topic Details'}
-                    </button>
+                <div className="flex w-full max-w-4xl overflow-y-auto max-h-[80vh] p-4">
+                    <div className="absolute top-4 right-4 flex space-x-4">
+                        <button
+                            onClick={handleToggleAll}
+                            className="px-3 py-1 text-sm bg-green-500 text-white rounded"
+                        >
+                            {showAll ? 'Collapse Details' : 'Topic Details'}
+                        </button>
+                        <button
+                            onClick={endCall}
+                            className="px-3 py-1 text-sm bg-red-500 text-white rounded"
+                        >
+                            End Call
+                        </button>
+                    </div>
                     <ul className="list-disc list-inside space-y-4 mt-10">
                         {[
                             {
@@ -105,7 +119,29 @@ function CallTerminal() {
                         ].map((listItem, index) => (
                             <li key={index} className='flex flex-col'>
                                 <div className='flex items-start mb-2'>
-                                    <div className="h-6 w-6 border-2 border-green-500 rounded-full mr-2"></div>
+                                    {!callEnded ? (
+                                        <div 
+                                            className={`h-6 w-6 border-2 rounded-full mr-2 ${
+                                                (listItem.title === 'Building Rapport' && salesAchievement.build_rapport) ||
+                                                (listItem.title === 'Active Listening and Question Handling' && salesAchievement.active_listening)
+                                                    ? 'bg-green-500'
+                                                    : 'border-green-500'
+                                            }`}
+                                        ></div>
+                                    ) : (
+                                        <div 
+                                            className={`h-6 w-6 mr-2 ${
+                                                (listItem.title === 'Building Rapport' && salesAchievement.build_rapport) ||
+                                                (listItem.title === 'Active Listening and Question Handling' && salesAchievement.active_listening)
+                                                    ? 'bg-green-500 rounded-full'
+                                                    : 'text-red-500 text-xl'
+                                            }`}
+                                        >
+                                            {!(listItem.title === 'Building Rapport' && salesAchievement.build_rapport) &&
+                                             !(listItem.title === 'Active Listening and Question Handling' && salesAchievement.active_listening) 
+                                            && '✗'}
+                                        </div>
+                                    )}
                                     <span 
                                         className='font-bold bg-green-200 rounded-md p-1 cursor-pointer'
                                     >
