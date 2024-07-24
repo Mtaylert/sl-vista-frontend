@@ -16,3 +16,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes slideInFromLeft {
+  from {
+      opacity: 0;
+      transform: translateX(-100%);
+  }
+  to {
+      opacity: 1;
+      transform: translateX(0);
+  }
+}
+
+/* Modal styles */
+.modal {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 1s ease-out, transform 1s ease-out; /* Updated duration */
+}
+
+.modal.show {
+  opacity: 1;
+  transform: translateX(0);
+  animation: slideInFromLeft 1s ease-out; /* Updated duration */
+}
