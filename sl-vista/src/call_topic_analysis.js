@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import Header from './header';
 
 const data = [
-    { theme: "Too many tools", mentions: 150, trend: "up" },
-    { theme: "Context Switching", mentions: 120, trend: "up" },
-    { theme: "AI Ethics", mentions: 66, trend: "down" },
-    { theme: "Generative AI", mentions: 52, trend: "down" },
-    { theme: "Hallucination", mentions: 42, trend: "up" }
+    { theme: "Too many tools", mentions: 150, trend: "up", changeRate: 15 },
+    { theme: "Context Switching", mentions: 120, trend: "up", changeRate: 10 },
+    { theme: "AI Ethics", mentions: 66, trend: "down", changeRate: -8 },
+    { theme: "Generative AI", mentions: 52, trend: "down", changeRate: -5 },
+    { theme: "Hallucination", mentions: 42, trend: "up", changeRate: 7 }
 ];
 
 const TopicAnalysis = () => {
@@ -37,6 +37,9 @@ const TopicAnalysis = () => {
                                 <th className="px-6 py-3 border-b text-center text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
                                     Trend
                                 </th>
+                                <th className="px-6 py-3 border-b text-center text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                    Change Rate
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,6 +59,11 @@ const TopicAnalysis = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">
                                         <span className={`font-bold ${getTrendColor(item.trend)}`}>
                                             {getTrendArrow(item.trend)}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 border-b">
+                                        <span className={`font-bold ${getTrendColor(item.trend)}`}>
+                                            {item.changeRate > 0 ? '+' : ''}{item.changeRate}%
                                         </span>
                                     </td>
                                 </tr>
