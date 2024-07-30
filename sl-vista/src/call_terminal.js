@@ -11,6 +11,12 @@ function CallTerminal() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [showAll, setShowAll] = useState(true);
     const [callEnded, setCallEnded] = useState(false); // New state for call end action
+    const [isNextStepsModalOpen, setNextStepsModalOpen] = useState(false);
+
+
+    const toggleNextStepsModal = () => {
+        setNextStepsModalOpen(!isNextStepsModalOpen);
+    };
 
     const fetchRecommendations = async () => {
         try {
@@ -78,20 +84,26 @@ function CallTerminal() {
             <div className="flex flex-col items-center mt-10 flex-grow">
                 <h1 className="text-2xl font-bold mb-4">SalesLoft Call Assistant</h1>
                 <div className="flex w-full max-w-4xl overflow-y-auto max-h-[80vh] p-4">
-                    <div className="absolute top-4 right-4 flex space-x-4">
-                        <button
-                            onClick={handleToggleAll}
-                            className="px-3 py-1 text-sm bg-green-500 text-white rounded"
-                        >
-                            {showAll ? 'Collapse Details' : 'Topic Details'}
-                        </button>
-                        <button
-                            onClick={endCall}
-                            className="px-3 py-1 text-sm bg-red-500 text-white rounded"
-                        >
-                            End Call
-                        </button>
-                    </div>
+                <div className="absolute top-4 right-4 flex space-x-4">
+                    <button
+                        onClick={handleToggleAll}
+                        className="px-3 py-1 text-sm bg-green-500 text-white rounded"
+                    >
+                        {showAll ? 'Collapse Details' : 'Topic Details'}
+                    </button>
+                    <button
+                        onClick={endCall}
+                        className="px-3 py-1 text-sm bg-red-500 text-white rounded"
+                    >
+                        End Call
+                    </button>
+                    <button
+                        onClick={toggleNextStepsModal}
+                        className="px-3 py-1 text-sm bg-blue-500 text-white rounded"
+                    >
+                        Next Steps
+                    </button>
+                </div>
                     <ul className="list-disc list-inside space-y-4 mt-10">
                         {[
                             {
@@ -185,6 +197,29 @@ function CallTerminal() {
                     >
                         Close
                     </button>
+                </div>
+            )}
+            {isNextStepsModalOpen && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                    <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                        <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">Next Steps</h3>
+                        <div className="mt-2 flex flex-col space-y-3">
+                        <button 
+                            onClick={() => {/* Add logic for sending summary email */}} 
+                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center"
+                        >
+                            <span>Send Summary Email</span>
+                            <span className="ml-2" title="AI-powered">✨</span>
+                        </button>
+                            <button onClick={() => {/* Add logic for scheduling next meeting */}} className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                               <span>Schedule Next Meeting</span>
+                    <span className="ml-2" title="Open calendar">📅</span>
+                            </button>
+                            <button onClick={toggleNextStepsModal} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
